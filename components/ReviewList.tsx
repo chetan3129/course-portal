@@ -1,14 +1,8 @@
-import { Review } from '@/lib/types'
-import { baseUrl } from '@/lib/api'
-
-async function getReviews(slug: string): Promise<Review[]> {
-  const res = await fetch(`${baseUrl()}/api/courses/${slug}/reviews`, { cache: 'no-store' })
-  if (!res.ok) throw new Error('Could not load student reviews')
-  return res.json()
-}
+import { getReviews, delay } from '@/lib/data'
 
 export default async function ReviewList({ slug }: { slug: string }) {
-  const reviews = await getReviews(slug)
+  await delay(2000)
+  const reviews = getReviews(slug)
 
   if (reviews.length === 0) {
     return <p>No reviews yet for this course.</p>
