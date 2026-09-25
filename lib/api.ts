@@ -1,11 +1,14 @@
-import { headers } from 'next/headers'
-
 export function baseUrl(): string {
+  // If explicitly configured in environment variables
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL
   }
 
-  const host = headers().get('host') ?? 'localhost:3000'
-  const protocol = host.startsWith('localhost') || host.startsWith('127.0.0.1') ? 'http' : 'https'
-  return `${protocol}://${host}`
+  // Vercel automatically sets this environment variable in production & previews
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+
+  // Fallback for local development
+  return 'http://localhost:3000'
 }
