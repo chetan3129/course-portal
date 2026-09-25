@@ -19,9 +19,10 @@ async function getCourse(slug: string): Promise<Course | null> {
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }): Promise<Metadata> {
-  const course = await getCourse(params.slug)
+  const { slug } = await params
+  const course = await getCourse(slug)
   if (!course) return { title: 'Course not found' }
 
   return {
@@ -35,8 +36,13 @@ export async function generateMetadata({
   }
 }
 
-export default async function CourseDetailsPage({ params }: { params: { slug: string } }) {
-  const course = await getCourse(params.slug)
+export default async function CourseDetailsPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const course = await getCourse(slug)
   if (!course) notFound()
 
   const enrolled = isEnrolled(course.slug)
